@@ -1,6 +1,9 @@
 const express = require("express");
 const routes = express.Router();
 const data_reader = require("./csv_reader");
+const bodyParser = require("body-parser");
+routes.use(bodyParser.urlencoded({extended:true}))
+
 
 routes.get('/serv_time',function(req,res){
     let ts = Date.now();
@@ -12,8 +15,10 @@ routes.get('/serv_time',function(req,res){
     let min = date_obj.getMinutes();
     res.send({type:'GET',servdate:`${year}/${month}/${date}`,servtime:`${hour}:${min}`})
 })
-routes.get('/csv_test',function(req,res){
-    dt = data_reader('./..','data_tester.csv',1);
+routes.post('/csv_test',function(req,res,next){
+    nb_dis = parseInt(req.body.nb_display)
+    console.log(`nb display: ${nb_dis}`)
+    dt = data_reader('./..','data_tester.csv',nb_dis);
     //console.log(data_reader());
     res.send({type:'GET',summary_hdr:`${dt[2]}`,summary_data:`${dt[3]}`,data:`${dt[1]}`})    
 })
