@@ -13,14 +13,24 @@ routes.get('/serv_time',function(req,res){
     let year = date_obj.getFullYear();
     let hour = date_obj.getHours();
     let min = date_obj.getMinutes();
-    res.send({type:'GET',servdate:`${year}/${month}/${date}`,servtime:`${hour}:${min}`})
+    res.send({type:'GET',
+            serv_year:`${year}`,
+            serv_month:`${month}`,
+            serv_day:`${date}`,
+            serv_hour:`${hour}`,
+            serv_min:`${min}`
+        })
 })
 routes.post('/csv_test',function(req,res,next){
     nb_dis = parseInt(req.body.nb_display)
+    path_file = req.body.path
+    file_name = req.body.file
+    file_path = `../../data/${path_file}`
+    console.log(`path: ${file_path}`)
     console.log(`nb display: ${nb_dis}`)
-    dt = data_reader('./..','data_tester.csv',nb_dis);
+    dt = data_reader(file_path,file_name,nb_dis);
     //console.log(data_reader());
-    res.send({type:'GET',summary_hdr:`${dt[2]}`,summary_data:`${dt[3]}`,data:`${dt[1]}`})    
+    res.send({type:'POST',summary_hdr:`${dt[2]}`,summary_data:`${dt[3]}`,data:`${dt[1]}`})    
 })
 routes.get('*',function (req,res) {
     res.send({type:'GET',msg:"Not found api"})    
